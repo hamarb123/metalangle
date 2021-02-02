@@ -98,10 +98,19 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        mMetalDevice = [MTLCreateSystemDefaultDevice() ANGLE_MTL_AUTORELEASE];
-        if (!mMetalDevice)
+        void* mMetalDevicePtr = hamarb123_GetMetalDevice();
+        if (!mMetalDevicePtr)
         {
-            return angle::Result::Stop;
+            mMetalDevice = [MTLCreateSystemDefaultDevice() ANGLE_MTL_AUTORELEASE];
+            if (!mMetalDevice)
+            {
+                return angle::Result::Stop;
+            }
+        }
+        else
+        {
+            mMetalDevice = [(id<MTLDevice>)mMetalDevicePtr ANGLE_MTL_AUTORELEASE];
+            //NSLog([NSString stringWithUTF8String:"%@"], [mMetalDevice name]); //used for debugging
         }
 
         mCmdQueue.set([[mMetalDevice.get() newCommandQueue] ANGLE_MTL_AUTORELEASE]);
@@ -1003,3 +1012,16 @@ mtl::AutoObjCObj<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListe
 #endif
 
 }  // namespace rx
+
+extern "C"
+{
+    void* hamarb123_MetalDevice;
+    void hamarb123_SetMetalDevice(void* device)
+    {
+        hamarb123_MetalDevice = device;
+    }
+    void* hamarb123_GetMetalDevice(void)
+    {
+        return hamarb123_MetalDevice;
+    }
+}

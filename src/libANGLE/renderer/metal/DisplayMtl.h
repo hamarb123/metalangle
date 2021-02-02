@@ -184,4 +184,10 @@ class DisplayMtl : public DisplayImpl
 
 }  // namespace rx
 
+extern "C"
+{
+    __attribute__((visibility("default"))) void hamarb123_SetMetalDevice(void* device);
+    __attribute__((visibility("default"))) void* hamarb123_GetMetalDevice(void);
+}
+
 #endif /* LIBANGLE_RENDERER_METAL_DISPLAYMTL_H_ */

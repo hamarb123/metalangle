@@ -132,6 +132,11 @@ ninja -C out/Release
 Ninja automatically calls GN to regenerate the build files on any configuration change. Ensure
 `depot_tools` is in your path as it provides ninja.
 
+If you get an error from building, you should try changing the following line in `build/mac/find_sdk.py`:
+`  sdks = [re.findall('^MacOSX(10\.\d+)\.sdk$', s) for s in os.listdir(sdk_dir)]`
+to
+`  sdks = [re.findall('^MacOSX(\d+\.\d+)\.sdk$', s) for s in os.listdir(sdk_dir)]`
+
 ## Application Development with ANGLE
 This sections describes how to use ANGLE to build an OpenGL ES application.
 
